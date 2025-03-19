@@ -174,25 +174,10 @@ namespace Worlde___WPF
             game.Player.Rounds = game.Rounds;
 
             ClearBoard();
-
-            //// DB Shit
-            ///          //bool exists = context.Players.Any(p => p.Name == playerName);
-            //if (!exists)
-            //{
-            //    Player createPlayer = new Player
-            //    {
-            //        Name = playerName,
-            //        Score = 0,
-            //        Rounds = 0
-            //    };
-            //    context.Players.Add(createPlayer);
-            //    context.SaveChanges();
-            //}
-            //string playerName = game.Player.Name;
-            //var changePlayer = context.Players.FirstOrDefault(name => name.Name == playerName.Trim());
-            //changePlayer.Score = changePlayer.Score + score;
-            //context.SaveChanges();
-            //PrepareNextRound();
+            
+            //DB
+            context.Players.Add(game.SavePlayerHighscore());
+            context.SaveChanges();
         }
         private int CheckCorrect(Game game)
         {
@@ -268,7 +253,6 @@ namespace Worlde___WPF
             pos4.IsEnabled = true;
             pos5.IsEnabled = true;
         }
-       
         private void CreateTextBox()
         {
             for(int i = 1; i < 6; i++)
@@ -339,7 +323,5 @@ namespace Worlde___WPF
             }
         }
         #endregion
-
-
     }
 }

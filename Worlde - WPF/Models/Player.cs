@@ -16,6 +16,7 @@ namespace Worlde___WPF.Models
         public DateTime Datum { get; set; }
         public int Rounds { get; set; }
 
+        public Player() { }
         public Player(string name)
         {
             Name = name;
@@ -25,7 +26,7 @@ namespace Worlde___WPF.Models
 
         public override string ToString()
         {
-            return $"\t{Datum.ToShortDateString(), -15} {Name, -12} {Rounds,-3}";
+            return $"\t{Datum.ToString("dd.MM.yy HH:mm"), -15} {Name, -12} {Rounds,-3}";
         }
 
     }

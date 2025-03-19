@@ -22,5 +22,16 @@ namespace Worlde___WPF.Models
             InnerRounds = 0;
         }
 
+        public Player SavePlayerHighscore()
+        {
+            Player savePlayer = new Player
+            {
+                Name = Player.Name,
+                Datum = Player.Datum,
+                Rounds = Player.Rounds
+            };
+            return savePlayer;
+        }
+
     }
 }

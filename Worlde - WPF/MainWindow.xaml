@@ -10,7 +10,7 @@
         Width="500"
         ResizeMode="NoResize">
     <Grid>
-        <!-- Menu Start -->
+        <!-- Menu -->
         <Grid x:Name="Menu" Visibility="Visible">
             <Label 
                 Content="WORDLE" 
@@ -76,10 +76,10 @@
                 Click="exit_Click" />
         </Grid>
 
-        <!-- Wordle Statistics -->
+        <!-- Highscore -->
         <Grid x:Name="WordleStat" Visibility="Collapsed">
             <Label 
-                Content="Statistics" 
+                Content="Highscore" 
                 FontSize="22"
                 HorizontalAlignment="Center" 
                 Margin="0,10,0,0" 
@@ -99,7 +99,7 @@
                 FontSize="18" Margin="50,60,50,10"/>
         </Grid>
 
-        <!-- Wordle Database -->
+        <!-- Words -->
         <Grid x:Name="WordleDatabase" Visibility="Collapsed">
             <Label 
                 Name="wordCount" 
@@ -126,7 +126,7 @@
                 Click="Back_Button_Database_Click"/>
         </Grid>
 
-        <!-- Wordle Game -->
+        <!-- Game Interface -->
         <Grid x:Name="Game" Visibility="Collapsed">
             <Label 
                 Content="WORDLE" 
@@ -142,7 +142,7 @@
             <TextBox Name="pos5" HorizontalAlignment="Center" Margin="200,100,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30" Height="30" FontSize="20" MaxLength="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyUp="pos5_TextEntered"/>
         </Grid>
 
-        <!-- Won / Lost Menu -->
+        <!-- Lost Interface -->
         <Grid x:Name="wlMenu" Visibility="Collapsed">
             <Label 
                 Content="WORDLE" 
@@ -183,7 +183,7 @@
 
         </Grid>
 
-        <!-- Won / Lost Menu -->
+        <!-- Win Interface -->
         <Grid x:Name="continueMenu" Visibility="Collapsed">
             <Label 
                 Content="WORDLE" 
