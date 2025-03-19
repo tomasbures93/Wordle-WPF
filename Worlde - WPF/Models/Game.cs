@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+
+namespace Worlde___WPF.Models
+{
+    public class Game
+    {
+        public string Word { get; set; }
+        public Player Player { get; set; }
+        public int Rounds { get; set; }
+        public int InnerRounds { get; set; }
+
+        public Game(string word, Player player)
+        {
+            Word = word;
+            Player = player;
+            Rounds = 0;
+            InnerRounds = 0;
+        }
+
+    }
+}

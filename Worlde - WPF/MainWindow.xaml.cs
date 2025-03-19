@@ -19,16 +19,16 @@ namespace Worlde___WPF
     public partial class MainWindow : Window
     {
         PlayerDBContext context = new PlayerDBContext();
+        Game GameStarted;
+        Random rnd;
         static List<string> wordsList = new List<string>();
         static List<TextBox> wordsTextBox = new List<TextBox>();
-        static int round, score;
-        static bool win;
-        static string word;
+
         public MainWindow()
         {
+            context.Database.EnsureCreated();
             InitializeComponent();
             LoadWords();
-            context.Database.EnsureCreated();
         }
 
         #region Main Menu
@@ -41,27 +41,19 @@ namespace Worlde___WPF
             }
             Menu.Visibility = Visibility.Collapsed;
             Game.Visibility = Visibility.Visible;
-            round = 1;
-            score = 0;
-            win = false;
-            Random rnd = new Random();
-            word = wordsList[rnd.Next(0, wordsList.Count)];
+            rnd = new Random();
+            Player player = new Player(Name.Text.Trim());
+            GameStarted = new Game(wordsList[rnd.Next(0, wordsList.Count)], player);
 
-            string playerName = Name.Text.Trim();
-            bool exists = context.Players.Any(p => p.Name == playerName);
-            if (!exists)
-            {
-                Player createPlayer = new Player
-                {
-                    Name = playerName,
-                    Score = 0,
-                    Win = 0,
-                    Lost = 0
-                };
-                context.Players.Add(createPlayer);
-                context.SaveChanges();
-            }
             Task.Delay(200).Wait();
+            pos1.Focus();
+
+        }
+        private void ContinueButton_Click(object sender, RoutedEventArgs e)
+        {
+            Game.Visibility = Visibility.Visible;
+            continueMenu.Visibility = Visibility.Collapsed;
+            GameStarted.Word = wordsList[rnd.Next(0, wordsList.Count)];
             pos1.Focus();
         }
         private void stats_Click(object sender, RoutedEventArgs e)
@@ -74,7 +66,7 @@ namespace Worlde___WPF
         {
             Menu.Visibility = Visibility.Collapsed;
             WordleDatabase.Visibility = Visibility.Visible;
-            wordCount.Content = "We have " + wordsList.Count + " words in Database";
+            wordCount.Content = "We have " + wordsList.Count + " words in our Database";
 
             foreach (string word in wordsList)
             {
@@ -135,65 +127,105 @@ namespace Worlde___WPF
         private void pos5_TextEntered(object sender, KeyEventArgs e)
         {
             Task.Delay(50).Wait();
-            int correctAnswers = CheckCorrected();
+            int correctAnswers = CheckCorrect(GameStarted);
 
-            if ((correctAnswers != 5))
+            if ((correctAnswers == 5))
             {
-                if(round < 6)
+                ShowContinueGameText(GameStarted);
+            } else {
+               
+                if (GameStarted.InnerRounds < 5)
                 {
                     CreateTextBox();
-                    round++;
-                } 
+                    GameStarted.InnerRounds++;
+                }
                 else
                 {
-                    win = false;
-                    DisableTextBoxes();
-                    ShowEndGameText();
+                    GameStarted.InnerRounds++;
+                    ShowEndGameText(GameStarted);
                 }
-            } else {
-                win = true;
-                DisableTextBoxes();
-                ShowEndGameText();
             }
         }
         #endregion
 
         #region Extra Functions
-        private void ShowEndGameText()
+        private void ShowContinueGameText(Game game)
         {
+            DisableTextBoxes();
+            game.Rounds++;
+            Game.Visibility = Visibility.Collapsed;
+            continueMenu.Visibility = Visibility.Visible;
+            searchedWord.Content = $"Word: {game.Word}";
+            statusText.Content = $"You WON!";
+            roundsText.Content = game.Rounds == 1 ? $"You finished {game.Rounds} round" : $"You finished {game.Rounds} rounds";
+
+            ClearBoard();
+        }
+        private void ShowEndGameText(Game game)
+        {
+            DisableTextBoxes();
             Game.Visibility = Visibility.Collapsed;
             wlMenu.Visibility = Visibility.Visible;
-            searched.Content = $"Word: {word}";
+            searched.Content = $"Word: {game.Word}";
+            status.Content = $"You LOST!";
+            rounds.Content = "Try it again!";
+            points.Content = game.Rounds == 1 ? $"You finished {game.Rounds} round" : $"You finished {game.Rounds} rounds";
 
-            if (win == true)
-            {
-                status.Content = $"You WON!";
-                rounds.Content = round == 1 ? $"You needed {round} round to find the right Word" : $"You needed {round} rounds to find the right Word";
-            }
-            else
-            {
-                status.Content = $"You LOST!";
-                rounds.Content = "Try it again!";
-            }
-            score = 6 - round;
-            points.Content = $"You earned {score} points.";
-            string playerName = Name.Text;
+            game.Player.Rounds = game.Rounds;
 
-            // DB Shit
-            var changePlayer = context.Players.FirstOrDefault(name => name.Name == playerName.Trim());
-            changePlayer.Score = changePlayer.Score + score;
-            if (win == true)
-            {
-                changePlayer.Win = changePlayer.Win + 1;
-            }
-            else
-            {
-                changePlayer.Lost = changePlayer.Lost + 1;
-            }
-            context.SaveChanges();
-            PrepareNextRound();
+            ClearBoard();
+
+            //// DB Shit
+            ///          //bool exists = context.Players.Any(p => p.Name == playerName);
+            //if (!exists)
+            //{
+            //    Player createPlayer = new Player
+            //    {
+            //        Name = playerName,
+            //        Score = 0,
+            //        Rounds = 0
+            //    };
+            //    context.Players.Add(createPlayer);
+            //    context.SaveChanges();
+            //}
+            //string playerName = game.Player.Name;
+            //var changePlayer = context.Players.FirstOrDefault(name => name.Name == playerName.Trim());
+            //changePlayer.Score = changePlayer.Score + score;
+            //context.SaveChanges();
+            //PrepareNextRound();
         }
-        private void PrepareNextRound()
+        private int CheckCorrect(Game game)
+        {
+            int counter = 0;
+            string gameWord = game.Word;
+            for (int i = 1; i < 6; i++)
+            {
+                TextBox? originalBox = (TextBox?)FindName($"pos{i}");
+
+                if (originalBox == null || string.IsNullOrEmpty(originalBox.Text))
+                {
+                    continue;
+                }
+
+                char character = originalBox.Text[0];
+
+                if (character == gameWord[i - 1])
+                {
+                    originalBox.BorderBrush = Brushes.Green;
+                    counter++;
+                }
+                else if (game.Word.Contains(character))
+                {
+                    originalBox.BorderBrush = Brushes.Yellow;
+                }
+                else
+                {
+                    originalBox.BorderBrush = Brushes.Red;
+                }
+            }
+            return counter;
+        }
+        private void ClearBoard()
         {
             for (int i = 0; i < wordsTextBox.Count; i++)
             {
@@ -236,36 +268,7 @@ namespace Worlde___WPF
             pos4.IsEnabled = true;
             pos5.IsEnabled = true;
         }
-        private int CheckCorrected()
-        {
-            int counter = 0;
-            for (int i = 1; i < 6; i++)
-            {
-                TextBox? originalBox = (TextBox?)FindName($"pos{i}");
-
-                if (originalBox == null || string.IsNullOrEmpty(originalBox.Text))
-                {
-                    continue;
-                }
-
-                char character = originalBox.Text[0];
-
-                if (character == word[i-1])
-                {
-                    originalBox.BorderBrush = Brushes.Green;
-                    counter++;
-                } 
-                else if(word.Contains(character))
-                {
-                    originalBox.BorderBrush = Brushes.Yellow;
-                } 
-                else
-                {
-                    originalBox.BorderBrush = Brushes.Red;
-                }
-            }
-            return counter;
-        }
+       
         private void CreateTextBox()
         {
             for(int i = 1; i < 6; i++)
@@ -294,7 +297,7 @@ namespace Worlde___WPF
                 originalBox.IsEnabled = true;
                 originalBox.Text = "";
             }
-            BlackBorder();
+            SetBlackBorder();
             MoveTextBoxes();
             pos1.Focus();
         }
@@ -306,7 +309,7 @@ namespace Worlde___WPF
             pos4.Margin = new Thickness(pos4.Margin.Left, pos4.Margin.Top + 50, pos4.Margin.Right, pos4.Margin.Bottom);
             pos5.Margin = new Thickness(pos5.Margin.Left, pos5.Margin.Top + 50, pos5.Margin.Right, pos5.Margin.Bottom);
         }
-        private void BlackBorder()
+        private void SetBlackBorder()
         {
             pos1.BorderBrush = Brushes.Black;
             pos2.BorderBrush = Brushes.Black;
@@ -336,5 +339,7 @@ namespace Worlde___WPF
             }
         }
         #endregion
+
+
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Worlde___WPF.Models
 {
-    internal class PlayerDBContext : DbContext
+    public class PlayerDBContext : DbContext
     {
         public DbSet<Player> Players { get; set; }
 

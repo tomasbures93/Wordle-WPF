@@ -45,7 +45,7 @@
                 Click="start_Click" />
             <Button 
                 x:Name="stats" 
-                Content="Statistics" 
+                Content="Highscore" 
                 HorizontalAlignment="Center" 
                 Margin="0,115,0,0" 
                 FontSize="18"
@@ -55,7 +55,7 @@
                 Height="50" Click="stats_Click" />
             <Button 
                 x:Name="database" 
-                Content="Wordle Database" 
+                Content="Words" 
                 FontSize="18"
                 FontWeight="Bold"
                 HorizontalAlignment="Center" 
@@ -181,6 +181,39 @@
             <Button Content="Main Menu" FontSize="22" Width="150" Height="50" HorizontalAlignment="Center" Margin="0,400,0,0" VerticalAlignment="Top" Click="GoToMainMenu_Click"/>
 
 
+        </Grid>
+
+        <!-- Won / Lost Menu -->
+        <Grid x:Name="continueMenu" Visibility="Collapsed">
+            <Label 
+                Content="WORDLE" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Top" 
+                Margin="0,10,0,0" 
+                FontSize="50" 
+                FontWeight="Bold"/>
+            <Label 
+                Name="statusText" 
+                Content="" 
+                HorizontalAlignment="Center" 
+                Margin="0,87,0,0" 
+                FontSize="22"
+                FontWeight="Bold"
+                VerticalAlignment="Top"/>
+            <Label 
+                Name="searchedWord" 
+                Content="" 
+                FontSize="18" 
+                HorizontalAlignment="Center" 
+                Margin="0,150,0,0" 
+                VerticalAlignment="Top"/>
+            <Label 
+                Name="roundsText" 
+                Content="Label" 
+                HorizontalAlignment="Center" 
+                Margin="0,200,0,0" 
+                VerticalAlignment="Top"/>
+            <Button Content="Next Game" FontSize="22" Width="150" Height="50" HorizontalAlignment="Center" Margin="0,400,0,0" VerticalAlignment="Top" Click="ContinueButton_Click"/>
         </Grid>
     </Grid>
 </Window>
