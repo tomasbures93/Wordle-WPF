@@ -19,7 +19,6 @@ namespace Worlde___WPF
     public partial class MainWindow : Window
     {
         PlayerDBContext context = new PlayerDBContext();
-        static string path = @"C:\Users\ITA7-TN01\Desktop\words.txt";
         static List<string> wordsList = new List<string>();
         static List<TextBox> wordsTextBox = new List<TextBox>();
         static int round, score;
@@ -323,9 +322,10 @@ namespace Worlde___WPF
                 playerList.Items.Add(player.ToString());
             }
         }
-        private static void LoadWords()
+        private void LoadWords()
         {
-            using (StreamReader sr = new StreamReader(path))
+            string pathWords = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "words.txt");
+            using (StreamReader sr = new StreamReader(pathWords))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)

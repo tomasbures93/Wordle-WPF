@@ -12,6 +12,8 @@ namespace Worlde___WPF.Models
     {
         public DbSet<Player> Players { get; set; }
 
+        public DbSet<Word> Words { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // This needs to be reworked !!!
