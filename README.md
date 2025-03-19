@@ -1,1 +1,3 @@
-# Worlde - WPF
+# WORDLE game - WPF
+
+WORDLE Projekt
