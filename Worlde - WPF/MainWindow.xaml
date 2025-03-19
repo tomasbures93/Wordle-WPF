@@ -92,6 +92,11 @@
                 Width="50"
                 Height="30" 
                 Click="Back_Button_Statistics_Click"/>
+            <ListBox 
+                Name="playerList"
+                Width="400"
+                Height="400"
+                FontSize="18" Margin="50,60,50,10"/>
         </Grid>
 
         <!-- Wordle Database -->
@@ -130,12 +135,6 @@
                 Margin="0,10,0,0" 
                 FontSize="50" 
                 FontWeight="Bold"/>
-            <Label 
-                Name="searchedWord" 
-                Content="Lets play" 
-                HorizontalAlignment="Left" 
-                Margin="408,437,0,0" 
-                VerticalAlignment="Top"/>
             <TextBox Name="pos1" HorizontalAlignment="Center" Margin="-200,100,0,0" Text="" VerticalAlignment="Top" Width="30" Height="30" FontSize="20" MaxLength="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyUp="pos1_TextEntered"/>
             <TextBox Name="pos2" HorizontalAlignment="Center" Margin="-100,100,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30" Height="30" FontSize="20" MaxLength="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyUp="pos2_TextEntered"/>
             <TextBox Name="pos3" HorizontalAlignment="Center" Margin="0,100,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30" Height="30" FontSize="20" MaxLength="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyUp="pos3_TextEntered"/>

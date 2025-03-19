@@ -11,12 +11,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Worlde___WPF.Models;
 
 namespace Worlde___WPF
 {
     
     public partial class MainWindow : Window
     {
+        PlayerDBContext context = new PlayerDBContext();
         static string path = @"C:\Users\ITA7-TN01\Desktop\words.txt";
         static List<string> wordsList = new List<string>();
         static List<TextBox> wordsTextBox = new List<TextBox>();
@@ -27,6 +29,7 @@ namespace Worlde___WPF
         {
             InitializeComponent();
             LoadWords();
+            context.Database.EnsureCreated();
         }
 
         #region Main Menu
@@ -44,12 +47,27 @@ namespace Worlde___WPF
             win = false;
             Random rnd = new Random();
             word = wordsList[rnd.Next(0, wordsList.Count)];
-            searchedWord.Content = word;
+
+            string playerName = Name.Text.Trim();
+            bool exists = context.Players.Any(p => p.Name == playerName);
+            if (!exists)
+            {
+                Player createPlayer = new Player
+                {
+                    Name = playerName,
+                    Score = 0,
+                    Win = 0,
+                    Lost = 0
+                };
+                context.Players.Add(createPlayer);
+                context.SaveChanges();
+            }
             Task.Delay(200).Wait();
             pos1.Focus();
         }
         private void stats_Click(object sender, RoutedEventArgs e)
         {
+            LoadStatistics();
             Menu.Visibility = Visibility.Collapsed;
             WordleStat.Visibility = Visibility.Visible;
         }
@@ -82,6 +100,7 @@ namespace Worlde___WPF
         }
         private void Back_Button_Statistics_Click(object sender, RoutedEventArgs e)
         {
+
             WordleStat.Visibility = Visibility.Collapsed;
             Menu.Visibility = Visibility.Visible;
         }
@@ -159,7 +178,20 @@ namespace Worlde___WPF
             }
             score = 6 - round;
             points.Content = $"You earned {score} points.";
+            string playerName = Name.Text;
 
+            // DB Shit
+            var changePlayer = context.Players.FirstOrDefault(name => name.Name == playerName.Trim());
+            changePlayer.Score = changePlayer.Score + score;
+            if (win == true)
+            {
+                changePlayer.Win = changePlayer.Win + 1;
+            }
+            else
+            {
+                changePlayer.Lost = changePlayer.Lost + 1;
+            }
+            context.SaveChanges();
             PrepareNextRound();
         }
         private void PrepareNextRound()
@@ -282,6 +314,14 @@ namespace Worlde___WPF
             pos3.BorderBrush = Brushes.Black;
             pos4.BorderBrush = Brushes.Black;
             pos5.BorderBrush = Brushes.Black;
+        }
+        private void LoadStatistics()
+        {
+            playerList.Items.Clear();
+            foreach (var player in context.Players)
+            {
+                playerList.Items.Add(player.ToString());
+            }
         }
         private static void LoadWords()
         {
