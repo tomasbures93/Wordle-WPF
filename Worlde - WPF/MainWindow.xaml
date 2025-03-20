@@ -95,9 +95,12 @@
                 Click="BackButtonHighscore_Click"/>
             <ListBox 
                 Name="playerList"
-                Width="400"
-                Height="400"
-                FontSize="18" Margin="50,60,50,10"/>
+                Width="350"
+                Height="350"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                FontSize="18" 
+                Margin="0,20,0,0"/>
         </Grid>
 
         <!-- Words -->
@@ -111,12 +114,12 @@
                 VerticalAlignment="Top"/>
             <ListBox 
                 Name="words" 
-                Margin="25,57,25,27" 
-                Width="450" 
-                Height="400"
+                Margin="0, 20, 0, 0" 
+                Width="350" 
+                Height="350"
                 FontSize="18"
-                BorderThickness="2"
-                BorderBrush="Green"/>
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"/>
             <Button 
                 Content="Back" 
                 HorizontalAlignment="Left" 

@@ -32,5 +32,32 @@ namespace Worlde___WPF.Models
             };
             return savePlayer;
         }
+        
+        public bool IsWordCorrect(string word)
+        {
+            if(word == Word)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsCharacterCorrectPosition(string word, int position)
+        {
+            if (word[position] == Word[position])
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsCharacterInWord(string word, int position)
+        {
+            if (Word.Contains(word[position]))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

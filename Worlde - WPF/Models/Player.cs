@@ -26,7 +26,7 @@ namespace Worlde___WPF.Models
 
         public override string ToString()
         {
-            return $"\t{Datum.ToString("dd.MM.yy HH:mm"), -15} {Name, -12} {Rounds,3}";
+            return $"{Datum.ToString("dd.MM.yy HH:mm"), -12} {Name, 12} \t         {Rounds,3}";
         }
 
     }

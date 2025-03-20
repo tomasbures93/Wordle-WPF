@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worlde - WPF", "Worlde - WPF\Worlde - WPF.csproj", "{8961CE39-412B-42D4-AC1D-7A46FF0E840E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordle - WPF", "Worlde - WPF\Wordle - WPF.csproj", "{8961CE39-412B-42D4-AC1D-7A46FF0E840E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordle - Unit Tests", "Wordle - Unit Tests\Wordle - Unit Tests.csproj", "{5C7595AB-D0F0-46BC-B4FA-294E8D791DE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8961CE39-412B-42D4-AC1D-7A46FF0E840E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8961CE39-412B-42D4-AC1D-7A46FF0E840E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8961CE39-412B-42D4-AC1D-7A46FF0E840E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C7595AB-D0F0-46BC-B4FA-294E8D791DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C7595AB-D0F0-46BC-B4FA-294E8D791DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C7595AB-D0F0-46BC-B4FA-294E8D791DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C7595AB-D0F0-46BC-B4FA-294E8D791DE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

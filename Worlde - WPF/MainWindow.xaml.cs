@@ -40,12 +40,12 @@ namespace Worlde___WPF
             }
             Menu.Visibility = Visibility.Collapsed;
             Game.Visibility = Visibility.Visible;
+
             Player player = new Player(Name.Text.Trim());
             GameStarted = new Game(player, Words.GenerateWord());
 
             Task.Delay(200).Wait();
             pos1.Focus();
-
         }
         private void ContinueButton_Click(object sender, RoutedEventArgs e)
         {
@@ -64,7 +64,7 @@ namespace Worlde___WPF
         {
             Menu.Visibility = Visibility.Collapsed;
             WordleDatabase.Visibility = Visibility.Visible;
-            wordCount.Content = "We have " + Words.GetAllWords().Count + " words in our Database";
+            wordCount.Content = Words.GetAllWords().Count + " words in Database";
 
             foreach (string word in Words.GetAllWords())
             {
@@ -127,19 +127,20 @@ namespace Worlde___WPF
 
             string word = pos1.Text + pos2.Text + pos3.Text + pos4.Text + pos5.Text;
 
-            if (!Words.IsWordInDictionary(word))
+            if (!Words.IsWordInDictionary(word.ToLower()))
             {
-                MessageBox.Show($"{word} is not in Dictionary");
+                MessageBox.Show($"{word.ToLower()} is not in Dictionary");
                 PlayRoundAgain();
                 return;
             }
-            int correctAnswers = CheckCorrect(GameStarted);
 
-            if ((correctAnswers == 5))
+            if (GameStarted.IsWordCorrect(word.ToLower()))
             {
                 ShowContinueGameText(GameStarted);
-            } else {
-               
+            }
+            else
+            {
+                CheckCorrect(GameStarted);
                 if (GameStarted.InnerRounds < 5)
                 {
                     CreateTextBox();
@@ -185,10 +186,9 @@ namespace Worlde___WPF
             context.Players.Add(game.SavePlayerHighscore());
             context.SaveChanges();
         }
-        private int CheckCorrect(Game game)
+        private void CheckCorrect(Game game)
         {
-            int counter = 0;
-            string gameWord = game.Word;
+            string word = pos1.Text + pos2.Text + pos3.Text + pos4.Text + pos5.Text;
             for (int i = 1; i < 6; i++)
             {
                 TextBox? originalBox = (TextBox?)FindName($"pos{i}");
@@ -198,18 +198,15 @@ namespace Worlde___WPF
                     continue;
                 }
 
-                char character = originalBox.Text[0];
-
-                if (character == gameWord[i - 1])
+                if (game.IsCharacterCorrectPosition(word, i - 1))
                 {
                     originalBox.BorderBrush = Brushes.Green;
                     originalBox.Background = Brushes.Green;
-                    counter++;
-                }
-                else if (gameWord.Contains(character))
+                } 
+                else if (game.IsCharacterInWord(word, i - 1))
                 {
                     originalBox.BorderBrush = Brushes.Yellow;
-                    originalBox.Background= Brushes.Yellow;
+                    originalBox.Background = Brushes.Yellow;
                 }
                 else
                 {
@@ -217,7 +214,6 @@ namespace Worlde___WPF
                     originalBox.Background = Brushes.Red;
                 }
             }
-            return counter;
         }
         private void LoadHighscore()
         {
@@ -227,7 +223,6 @@ namespace Worlde___WPF
                 playerList.Items.Add(p.ToString());
             }
         }
-
         private void PlayRoundAgain()
         {
             EnableTextBoxes();
@@ -285,7 +280,7 @@ namespace Worlde___WPF
         {
             for(int i = 1; i < 6; i++)
             {
-                TextBox? originalBox = (TextBox?)FindName($"pos{i}");           // We get the name of the Element in XAML
+                TextBox? originalBox = (TextBox?)FindName($"pos{i}");           
 
                 if (originalBox == null) continue; 
 
@@ -339,7 +334,6 @@ namespace Worlde___WPF
             pos4.Background = Brushes.White;
             pos5.Background = Brushes.White;
         }
-
         #endregion
     }
 }

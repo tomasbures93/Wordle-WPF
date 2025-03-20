@@ -15,19 +15,10 @@ namespace Worlde___WPF.Models
         {
             LoadWords();
         }
-
-        public string GenerateWord()
-        {
-            Random rnd = new Random();
-            string word = _words[rnd.Next(0, _words.Count)];
-            return word;
-        }
-
         public List<string> GetAllWords()
         {
             return _words;
         }
-
         private void LoadWords()
         {
             string pathWords = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "words.txt");
@@ -41,7 +32,12 @@ namespace Worlde___WPF.Models
                 }
             }
         }
-
+        public string GenerateWord()
+        {
+            Random rnd = new Random();
+            string word = _words[rnd.Next(0, _words.Count)];
+            return word;
+        }
         public bool IsWordInDictionary(string word)
         {
             foreach (string w in _words)
