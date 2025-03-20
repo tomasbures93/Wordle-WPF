@@ -25,3 +25,16 @@ You have six attempts to guess the correct word!<br/>
 Contributions are welcome! If you find any issues or have ideas for improvements, feel free to:
 - Open an issue
 - Submit a pull request
+
+## 🚀 Installation
+
+### Prerequisites  
+- .NET SDK (Version 6.0 or later)  
+- Git (optional, for cloning)
+
+### Steps
+1. Clone the repository:  
+   git clone https://github.com/tomasbures93/Wordle-WPF.git <br />
+   cd Wordle-WPF
+2. Open the project in **Visual Studio** or **VS Code**.
+3. Build and run the project using: dotnet run / dotnet build
