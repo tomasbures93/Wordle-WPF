@@ -14,7 +14,7 @@ namespace Worlde___WPF.Models
         public int Rounds { get; set; }
         public int InnerRounds { get; set; }
 
-        public Game(string word, Player player)
+        public Game(Player player, string word)
         {
             Word = word;
             Player = player;
@@ -32,6 +32,5 @@ namespace Worlde___WPF.Models
             };
             return savePlayer;
         }
-
     }
 }

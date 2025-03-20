@@ -20,19 +20,18 @@ namespace Worlde___WPF
     {
         PlayerDBContext context = new PlayerDBContext();
         Game GameStarted;
-        Random rnd;
-        static List<string> wordsList = new List<string>();
+        Words Words;
         static List<TextBox> wordsTextBox = new List<TextBox>();
 
         public MainWindow()
         {
             context.Database.EnsureCreated();
+            Words = new Words();
             InitializeComponent();
-            LoadWords();
         }
 
-        #region Main Menu
-        private void start_Click(object sender, RoutedEventArgs e)
+        #region Main Menu Button Events
+        private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             if(Name.Text == "Insert Name" || Name.Text == string.Empty)
             {
@@ -41,9 +40,8 @@ namespace Worlde___WPF
             }
             Menu.Visibility = Visibility.Collapsed;
             Game.Visibility = Visibility.Visible;
-            rnd = new Random();
             Player player = new Player(Name.Text.Trim());
-            GameStarted = new Game(wordsList[rnd.Next(0, wordsList.Count)], player);
+            GameStarted = new Game(player, Words.GenerateWord());
 
             Task.Delay(200).Wait();
             pos1.Focus();
@@ -53,27 +51,27 @@ namespace Worlde___WPF
         {
             Game.Visibility = Visibility.Visible;
             continueMenu.Visibility = Visibility.Collapsed;
-            GameStarted.Word = wordsList[rnd.Next(0, wordsList.Count)];
+            GameStarted.Word = Words.GenerateWord();
             pos1.Focus();
         }
-        private void stats_Click(object sender, RoutedEventArgs e)
+        private void HighscoreButton_Click(object sender, RoutedEventArgs e)
         {
-            LoadStatistics();
+            LoadHighscore();
             Menu.Visibility = Visibility.Collapsed;
             WordleStat.Visibility = Visibility.Visible;
         }
-        private void database_Click(object sender, RoutedEventArgs e)
+        private void WordDatabase_Click(object sender, RoutedEventArgs e)
         {
             Menu.Visibility = Visibility.Collapsed;
             WordleDatabase.Visibility = Visibility.Visible;
-            wordCount.Content = "We have " + wordsList.Count + " words in our Database";
+            wordCount.Content = "We have " + Words.GetAllWords().Count + " words in our Database";
 
-            foreach (string word in wordsList)
+            foreach (string word in Words.GetAllWords())
             {
                 words.Items.Add(word);
             }
         }
-        private void exit_Click(object sender, RoutedEventArgs e)
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
         }
@@ -83,13 +81,13 @@ namespace Worlde___WPF
         }
         #endregion
 
-        #region Extra buttons
-        private void Back_Button_Database_Click(object sender, RoutedEventArgs e)
+        #region Extra Button Event
+        private void BackButtonWords_Click(object sender, RoutedEventArgs e)
         {
             WordleDatabase.Visibility = Visibility.Collapsed;
             Menu.Visibility = Visibility.Visible;
         }
-        private void Back_Button_Statistics_Click(object sender, RoutedEventArgs e)
+        private void BackButtonHighscore_Click(object sender, RoutedEventArgs e)
         {
 
             WordleStat.Visibility = Visibility.Collapsed;
@@ -100,10 +98,9 @@ namespace Worlde___WPF
             wlMenu.Visibility = Visibility.Collapsed;
             Menu.Visibility = Visibility.Visible;
         }
-
         #endregion
 
-        #region Game Mechanics
+        #region Game TextBoxes
         private void pos1_TextEntered(object sender, KeyEventArgs e)
         {
             pos2.Focus();
@@ -127,6 +124,15 @@ namespace Worlde___WPF
         private void pos5_TextEntered(object sender, KeyEventArgs e)
         {
             Task.Delay(50).Wait();
+
+            string word = pos1.Text + pos2.Text + pos3.Text + pos4.Text + pos5.Text;
+
+            if (!Words.IsWordInDictionary(word))
+            {
+                MessageBox.Show($"{word} is not in Dictionary");
+                PlayRoundAgain();
+                return;
+            }
             int correctAnswers = CheckCorrect(GameStarted);
 
             if ((correctAnswers == 5))
@@ -148,17 +154,17 @@ namespace Worlde___WPF
         }
         #endregion
 
-        #region Extra Functions
+        #region Game Functions
         private void ShowContinueGameText(Game game)
         {
             DisableTextBoxes();
             game.Rounds++;
+            game.InnerRounds = 0;
             Game.Visibility = Visibility.Collapsed;
             continueMenu.Visibility = Visibility.Visible;
             searchedWord.Content = $"Word: {game.Word}";
             statusText.Content = $"You WON!";
             roundsText.Content = game.Rounds == 1 ? $"You finished {game.Rounds} round" : $"You finished {game.Rounds} rounds";
-
             ClearBoard();
         }
         private void ShowEndGameText(Game game)
@@ -197,19 +203,42 @@ namespace Worlde___WPF
                 if (character == gameWord[i - 1])
                 {
                     originalBox.BorderBrush = Brushes.Green;
+                    originalBox.Background = Brushes.Green;
                     counter++;
                 }
-                else if (game.Word.Contains(character))
+                else if (gameWord.Contains(character))
                 {
                     originalBox.BorderBrush = Brushes.Yellow;
+                    originalBox.Background= Brushes.Yellow;
                 }
                 else
                 {
                     originalBox.BorderBrush = Brushes.Red;
+                    originalBox.Background = Brushes.Red;
                 }
             }
             return counter;
         }
+        private void LoadHighscore()
+        {
+            playerList.Items.Clear();
+            foreach (var p in context.Players.OrderByDescending(player => player.Rounds))
+            {
+                playerList.Items.Add(p.ToString());
+            }
+        }
+
+        private void PlayRoundAgain()
+        {
+            EnableTextBoxes();
+            SetBlackBorder();
+            SetWhiteBackground();
+            ClearTextBoxes();
+            pos1.Focus();
+        }
+        #endregion
+
+        #region Help Functions
         private void ClearBoard()
         {
             for (int i = 0; i < wordsTextBox.Count; i++)
@@ -218,24 +247,23 @@ namespace Worlde___WPF
             }
 
             EnableTextBoxes();
-
-            pos1.Text = "";
-            pos2.Text = "";
-            pos3.Text = "";
-            pos4.Text = "";
-            pos5.Text = "";
-
-            pos1.BorderBrush = Brushes.Black;
-            pos2.BorderBrush = Brushes.Black;
-            pos3.BorderBrush = Brushes.Black;
-            pos4.BorderBrush = Brushes.Black;
-            pos5.BorderBrush = Brushes.Black;
+            ClearTextBoxes();
+            SetBlackBorder();
+            SetWhiteBackground();
 
             pos1.Margin = new Thickness(pos1.Margin.Left, 100, pos1.Margin.Right, pos1.Margin.Bottom);
             pos2.Margin = new Thickness(pos2.Margin.Left, 100, pos2.Margin.Right, pos2.Margin.Bottom);
             pos3.Margin = new Thickness(pos3.Margin.Left, 100, pos3.Margin.Right, pos3.Margin.Bottom);
             pos4.Margin = new Thickness(pos4.Margin.Left, 100, pos4.Margin.Right, pos4.Margin.Bottom);
             pos5.Margin = new Thickness(pos5.Margin.Left, 100, pos5.Margin.Right, pos5.Margin.Bottom);
+        }
+        private void ClearTextBoxes()
+        {
+            pos1.Text = "";
+            pos2.Text = "";
+            pos3.Text = "";
+            pos4.Text = "";
+            pos5.Text = "";
         }
         private void DisableTextBoxes()
         {
@@ -267,11 +295,12 @@ namespace Worlde___WPF
                     Height = 30,
                     FontSize = originalBox.FontSize,
                     Margin = originalBox.Margin,
-                    MaxLength = 1,
+                    MaxLength = originalBox.MaxLength,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalContentAlignment = HorizontalAlignment.Center,
                     VerticalContentAlignment = VerticalAlignment.Center,
+                    Background = originalBox.Background,
                     BorderBrush = originalBox.BorderBrush,
                     Text = originalBox.Text,
                     IsEnabled = false
@@ -282,6 +311,7 @@ namespace Worlde___WPF
                 originalBox.Text = "";
             }
             SetBlackBorder();
+            SetWhiteBackground();
             MoveTextBoxes();
             pos1.Focus();
         }
@@ -301,27 +331,15 @@ namespace Worlde___WPF
             pos4.BorderBrush = Brushes.Black;
             pos5.BorderBrush = Brushes.Black;
         }
-        private void LoadStatistics()
+        private void SetWhiteBackground()
         {
-            playerList.Items.Clear();
-            foreach (var player in context.Players)
-            {
-                playerList.Items.Add(player.ToString());
-            }
+            pos1.Background = Brushes.White;
+            pos2.Background = Brushes.White;
+            pos3.Background = Brushes.White;
+            pos4.Background = Brushes.White;
+            pos5.Background = Brushes.White;
         }
-        private void LoadWords()
-        {
-            string pathWords = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "words.txt");
-            using (StreamReader sr = new StreamReader(pathWords))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    line = line.Trim();
-                    wordsList.Add(line);
-                }
-            }
-        }
+
         #endregion
     }
 }

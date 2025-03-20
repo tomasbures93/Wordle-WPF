@@ -42,7 +42,7 @@
                 VerticalAlignment="Center" 
                 Width="199" 
                 Height="50" 
-                Click="start_Click" />
+                Click="StartButton_Click" />
             <Button 
                 x:Name="stats" 
                 Content="Highscore" 
@@ -52,7 +52,8 @@
                 FontWeight="Bold"
                 VerticalAlignment="Center" 
                 Width="199" 
-                Height="50" Click="stats_Click" />
+                Height="50" 
+                Click="HighscoreButton_Click" />
             <Button 
                 x:Name="database" 
                 Content="Words" 
@@ -63,7 +64,7 @@
                 VerticalAlignment="Center" 
                 Width="199" 
                 Height="50" 
-                Click="database_Click" />
+                Click="WordDatabase_Click" />
             <Button 
                 x:Name="exit" 
                 Content="Exit" 
@@ -73,7 +74,7 @@
                 VerticalAlignment="Center" 
                 Width="199" 
                 Height="50" 
-                Click="exit_Click" />
+                Click="ExitButton_Click" />
         </Grid>
 
         <!-- Highscore -->
@@ -91,7 +92,7 @@
                 VerticalAlignment="Top"
                 Width="50"
                 Height="30" 
-                Click="Back_Button_Statistics_Click"/>
+                Click="BackButtonHighscore_Click"/>
             <ListBox 
                 Name="playerList"
                 Width="400"
@@ -123,7 +124,7 @@
                 VerticalAlignment="Top"
                 Width="50"
                 Height="30" 
-                Click="Back_Button_Database_Click"/>
+                Click="BackButtonWords_Click"/>
         </Grid>
 
         <!-- Game Interface -->
@@ -178,9 +179,15 @@
                 HorizontalAlignment="Center" 
                 Margin="0,230,0,0" 
                 VerticalAlignment="Top"/>
-            <Button Content="Main Menu" FontSize="22" Width="150" Height="50" HorizontalAlignment="Center" Margin="0,400,0,0" VerticalAlignment="Top" Click="GoToMainMenu_Click"/>
-
-
+            <Button 
+                Content="Main Menu" 
+                FontSize="22" 
+                Width="150" 
+                Height="50" 
+                HorizontalAlignment="Center" 
+                Margin="0,400,0,0" 
+                VerticalAlignment="Top" 
+                Click="GoToMainMenu_Click"/>
         </Grid>
 
         <!-- Win Interface -->
@@ -213,7 +220,15 @@
                 HorizontalAlignment="Center" 
                 Margin="0,200,0,0" 
                 VerticalAlignment="Top"/>
-            <Button Content="Next Game" FontSize="22" Width="150" Height="50" HorizontalAlignment="Center" Margin="0,400,0,0" VerticalAlignment="Top" Click="ContinueButton_Click"/>
+            <Button 
+                Content="Next Game" 
+                FontSize="22" 
+                Width="150" 
+                Height="50" 
+                HorizontalAlignment="Center" 
+                Margin="0,400,0,0" 
+                VerticalAlignment="Top" 
+                Click="ContinueButton_Click"/>
         </Grid>
     </Grid>
 </Window>
