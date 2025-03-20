@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <RootNamespace>Wordle___Unit_Tests</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Wordle___Unit_Test</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
